@@ -1,0 +1,21 @@
+Codes,count
+Syntax Design Choices,8
+No Side-effects While Pattern Matching,3
+Distinguishing Capture and Value Patterns,3
+Recommendation for Python Developers,3
+Partial Bindings in Failed Matches,2
+Nested sub-pattern,2
+Improve code readability,2
+Improve Code Elegance,2
+Name Binding,2
+Supporting Positional Attribute Matching,2
+Keyword Selection,2
+Subject Expression Evaluation,1
+Design decision,1
+Guard Evaluation,1
+case expressions might have side effects,1
+Avoid Reliance on Failed Match Bindings,1
+Missing or deferred specification to Python implementations,1
+Pattern Syntax Definition,1
+Irrefutable Patterns,1
+Structural Pattern Matching is a new compound statement,1

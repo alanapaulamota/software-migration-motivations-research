@@ -1,0 +1,30 @@
+Group,Benefits,Design Decision,Informal Semantics of Structural Pattern Matching,Key Feature,Limitations,Match Statement Grammar,Missing or Deferred Specification,Practice,Soft Keywords,Structural Pattern Matching and Side Effects,Syntax of Structural Pattern Matching
+AS Patterns,0,1,0,0,0,0,0,0,0,0,0
+Alternative Approaches,0,0,0,0,2,0,0,0,0,0,0
+Class Patterns,0,11,0,0,0,0,0,0,0,0,0
+Developer Guidance,0,0,0,0,0,0,0,4,0,0,0
+Guard Behavior,0,1,0,0,0,0,0,0,0,0,0
+Guards,0,1,0,0,0,0,0,0,0,0,0
+Implementation Behavior,0,0,0,0,0,0,1,0,0,1,0
+Implementation Flexibility,0,0,0,0,0,0,3,0,0,0,0
+Key Feature,0,0,7,0,0,0,0,0,0,0,0
+Keyword Handling,0,0,0,0,0,0,0,0,1,0,0
+Literal Patterns,0,4,0,0,0,0,0,0,0,0,0
+Mapping Patterns,0,4,0,0,0,0,0,0,0,0,0
+Match Statement,0,1,0,0,0,0,0,0,0,0,0
+Match Statement Execution,0,0,2,0,0,0,0,0,0,0,0
+Match/Case Syntax,0,0,0,0,0,1,0,0,0,0,1
+Matching Process Behavior,0,0,1,0,0,0,0,0,0,0,0
+Motivation,14,0,0,0,0,0,0,0,0,0,0
+OR Patterns,0,2,0,0,0,0,0,0,0,0,0
+Outcome,0,0,4,0,0,0,0,0,0,0,0
+Pattern Classification,0,0,1,0,0,0,0,0,0,0,0
+Pattern Design,0,4,1,0,0,0,0,0,0,0,0
+Pattern Grammar,0,0,0,0,0,0,0,0,0,0,2
+Pattern Matching Process,0,0,1,0,0,0,0,0,0,0,0
+Patterns,0,10,0,0,0,0,0,0,0,0,0
+Sequence Patterns,0,5,0,1,0,0,0,0,0,0,0
+Subpattern Evaluation,0,0,1,0,0,0,0,0,0,0,0
+Syntax,0,13,0,0,0,0,0,0,0,0,0
+Value Patterns,0,1,0,0,0,0,0,0,0,0,0
+Wildcard Patterns,0,2,0,0,0,0,0,0,0,0,0
