@@ -1,0 +1,352 @@
+Taxonomy: Structural Pattern Matching (PEP 634/635/636)
+
+├── Pattern Matching Process
+│
+│   ├── Pattern Matching Process
+│   │   ├── Theme: Informal semantics of structural pattern matching
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Left-to-right Matching
+│   │   ├── Theme: Sequential evaluation of subpatterns during matching
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Subpattern Evaluation
+│   │   ├── Theme: Evaluation of nested patterns as part of matching
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Nested Sub-pattern
+│   │   ├── Theme: Recursive composition of patterns
+│   │   └── Classification: Key Feature
+│   │
+│   ├── First-to-match Rule
+│   │   ├── Theme: Selection of the first successful pattern
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Success or Failure
+│   │   ├── Theme: Match outcome determination
+│   │   └── Classification: Informal Semantics
+│   │
+│   └── No Side-effects While Pattern Matching
+│       ├── Theme: Avoiding side effects during pattern evaluation
+│       └── Classification: Informal Semantics
+│
+├── Match/Case Syntax
+│
+│   ├── Structural Pattern Matching is a New Compound Statement
+│   │   ├── Theme: Introduction of match/case as a new compound statement
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Syntax of Structural Pattern Matching
+│   │   ├── Theme: Definition of match statement syntax
+│   │   └── Classification: Match Statement Grammar
+│   │
+│   ├── Match Statement Grammar
+│   │   ├── Theme: Formal grammar specification of match statements
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Syntax Design Choices
+│   │   ├── Theme: Decisions regarding syntax design
+│   │   └── Classification: Design Decision
+│   │
+│   ├── Indentation
+│   │   ├── Theme: Applying Python indentation rules to match blocks
+│   │   └── Classification: Design Decision
+│   │
+│   ├── Keyword Selection
+│   │   ├── Theme: Selection of match and case keywords
+│   │   └── Classification: Design Decision
+│   │
+│   ├── Soft Keywords
+│   │   ├── Theme: Treating match and case as context-dependent keywords
+│   │   └── Classification: Design Decision
+│   │
+│   └── Scope Design
+│       ├── Theme: Defining variable scope behavior in pattern matching
+│       └── Classification: Design Decision
+│
+├── Match Statement Execution
+│
+│   ├── Subject Expression Evaluation
+│   │   ├── Theme: Evaluating subject expression before matching patterns
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Guard Evaluation
+│   │   ├── Theme: Evaluating conditions after successful pattern matching
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── First Matching Case Selection
+│   │   ├── Theme: Executing only the first matching case clause
+│   │   └── Classification: Design Decision
+│   │
+│   └── Guard Side Effects
+│       ├── Theme: Allowing case guards containing expressions with side effects
+│       └── Classification: Design Decision
+│
+├── Outcome
+│
+│   ├── Name Binding
+│   │   ├── Theme: Creating bindings from successful pattern matches
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Capture Pattern Binding
+│   │   ├── Theme: Assigning values captured by patterns
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── AS Pattern Success and Name Binding
+│   │   ├── Theme: Binding complete matched objects using as-patterns
+│   │   └── Classification: Informal Semantics
+│   │
+│   ├── Partial Bindings in Failed Matches
+│   │   ├── Theme: Behavior of bindings after unsuccessful matching
+│   │   └── Classification: Informal Semantics
+│   │
+│   └── Binding State After Failed Match
+│       ├── Theme: Unspecified state of variables after failed matches
+│       └── Classification: Missing or Deferred Specification
+│
+
+├── Pattern Grammar
+│
+│   ├── Pattern Syntax Definition
+│   │   ├── Theme: Formal syntax specification of patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── AS Pattern Syntax
+│   │   ├── Theme: Syntax definition for as-patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Capture Pattern Syntax
+│   │   ├── Theme: Syntax rules for variable capture patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Literal Pattern Syntax
+│   │   ├── Theme: Syntax rules for literal patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Sequence Pattern Syntax
+│   │   ├── Theme: Syntax rules for sequence patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   ├── Mapping Pattern Syntax
+│   │   ├── Theme: Syntax rules for mapping patterns
+│   │   └── Classification: Syntax of Structural Pattern Matching
+│   │
+│   └── Class Pattern Syntax
+│       ├── Theme: Syntax rules for class patterns
+│       └── Classification: Syntax of Structural Pattern Matching
+│
+
+├── Pattern Types
+│
+│   ├── Literal Patterns
+│   │
+│   │   ├── Using Literal Patterns for Value Matching
+│   │   │   ├── Theme: Matching values using literal constants
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Equality-Based Matching
+│   │   │   ├── Theme: Using equality comparison for literal patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Identity Versus Equality Matching
+│   │   │   ├── Theme: Choosing equality instead of identity comparison
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Value Pattern Matching
+│   │   │   ├── Theme: Matching qualified constant values
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Qualified Names for Constants
+│   │       ├── Theme: Using dotted names for constant matching
+│   │       └── Classification: Design Decision
+│   │
+│   ├── Capture Patterns
+│   │
+│   │   ├── Capture as Default Behavior
+│   │   │   ├── Theme: Names capture values by default
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Distinguishing Capture and Value Patterns
+│   │   │   ├── Theme: Differentiating variable capture from constant matching
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Prohibiting Repeated Capture Variable Names
+│   │   │   ├── Theme: Preventing duplicated capture names in patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Rejecting Explicit Capture Markers
+│   │       ├── Theme: Avoiding explicit syntax for capture patterns
+│   │       └── Classification: Design Decision
+│
+├── Pattern Types
+│
+│   ├── Wildcard Patterns
+│   │
+│   │   ├── Wildcard Pattern
+│   │   │   ├── Theme: Ignoring unmatched values using underscore
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Using _ as Wildcard Pattern
+│   │       ├── Theme: Defining underscore as a discard pattern
+│   │       └── Classification: Design Decision
+│   │
+│   ├── Sequence Patterns
+│   │
+│   │   ├── Structural Matching of Sequences
+│   │   │   ├── Theme: Matching sequence structures using patterns
+│   │   │   └── Classification: Key Feature
+│   │   │
+│   │   ├── Reuse of Iterable Unpacking Semantics
+│   │   │   ├── Theme: Reusing Python unpacking behavior in patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Reuse of Iterable Unpacking Syntax
+│   │   │   ├── Theme: Applying familiar unpacking syntax to sequences
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Restricting Multiple Star Patterns
+│   │   │   ├── Theme: Allowing only one starred pattern per sequence
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Matching Only Sequence Objects
+│   │   │   ├── Theme: Restricting matching to sequence protocol objects
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Excluding Strings and Bytes from Sequence Patterns
+│   │       ├── Theme: Avoiding unexpected matching behavior for strings
+│   │       └── Classification: Design Decision
+│   │
+│   ├── Mapping Patterns
+│   │
+│   │   ├── Matching Mappings by Keys
+│   │   │   ├── Theme: Matching dictionaries and mapping structures by keys
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Restricting Mapping Pattern Keys
+│   │   │   ├── Theme: Limiting mapping keys to literals and value patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Restricting Mapping Pattern Keys to Literals and Value Patterns
+│   │   │   ├── Theme: Preventing ambiguous key matching behavior
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Avoiding Side Effects During Key Lookup
+│   │   │   ├── Theme: Minimizing observable effects during mapping matching
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Ignoring Extra Mapping Keys
+│   │       ├── Theme: Allowing additional keys not specified in patterns
+│   │       └── Classification: Design Decision
+│   │
+│   ├── Class Patterns
+│   │
+│   │   ├── Combining Instance Checks and Attribute Extraction
+│   │   │   ├── Theme: Matching object type and extracting attributes together
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Matching Object Types and Attributes
+│   │   │   ├── Theme: Supporting object-oriented structural matching
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Attribute-Based Matching with Object Patterns
+│   │   │   ├── Theme: Extracting object attributes during matching
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Positional Class Patterns and Object Structure
+│   │   │   ├── Theme: Mapping positional arguments to attributes
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Supporting Positional Attribute Matching
+│   │   │   ├── Theme: Matching attributes through positional patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Named Attribute Patterns
+│   │   │   ├── Theme: Matching attributes explicitly by name
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Positional Patterns with match_args
+│   │   │   ├── Theme: Using __match_args__ for positional matching
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Using isinstance() and __match_args__
+│   │   │   ├── Theme: Combining runtime type checking and attribute extraction
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   ├── Mirroring Construction and Deconstruction Syntax
+│   │   │   ├── Theme: Aligning object creation and pattern decomposition
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── Using Class Patterns for Type Validation
+│   │       ├── Theme: Validating object types through matching
+│   │       └── Classification: Design Decision
+│   │
+│   ├── OR Patterns
+│   │
+│   │   ├── Alternative Pattern Composition
+│   │   │   ├── Theme: Combining multiple possible patterns
+│   │   │   └── Classification: Design Decision
+│   │   │
+│   │   └── OR Pattern Binding Rules
+│   │       ├── Theme: Defining variable bindings in alternative matches
+│   │       └── Classification: Design Decision
+│   │
+│   └── AS Patterns
+│       │
+│       ├── Capturing Values from Matched Patterns
+│       │   ├── Theme: Binding complete matched values
+│       │   └── Classification: Design Decision
+│       │
+│       └── Combining Matching and Binding
+│           ├── Theme: Extending patterns with explicit value capture
+│           └── Classification: Design Decision
+│
+
+├── Motivation and Goals
+│
+│   ├── Code Readability and Maintainability
+│   │   ├── Theme: Improving readability of complex conditional logic
+│   │   └── Classification: Benefits
+│   │
+│   ├── Code Simplification
+│   │   ├── Reduction of Conditional Boilerplate
+│   │   │   ├── Theme: Reducing repetitive if/elif structures
+│   │   │   └── Classification: Benefits
+│   │   │
+│   │   └── Improve Code Brevity
+│   │       ├── Theme: Writing shorter and clearer implementations
+│   │       └── Classification: Benefits
+│   │
+│   ├── Data Structure Handling
+│   │   ├── Support for Complex Data Structures
+│   │   │   ├── Theme: Matching nested and structured data
+│   │   │   └── Classification: Benefits
+│   │   │
+│   │   ├── Support for Built-in Types
+│   │   │   ├── Theme: Applying matching to Python built-in structures
+│   │   │   └── Classification: Benefits
+│   │   │
+│   │   └── Structural Matching Beyond Class-Based Dispatch
+│   │       ├── Theme: Supporting structural decisions beyond inheritance
+│   │       └── Classification: Benefits
+│   │
+│   ├── Programming Paradigm Support
+│   │   ├── Support Functional Programming Style
+│   │   │   ├── Theme: Enabling functional-style data processing
+│   │   │   └── Classification: Benefits
+│   │   │
+│   │   ├── Multiple Programming Styles and Data Representations
+│   │   │   ├── Theme: Supporting different programming approaches
+│   │   │   └── Classification: Benefits
+│   │   │
+│   │   └── Complementary to Object-Oriented Programming
+│   │       ├── Theme: Extending object-oriented programming capabilities
+│   │       └── Classification: Benefits
+│   │
+│   └── Design Flexibility
+│       ├── Improved Separation of Concerns
+│       │   ├── Theme: Separating data representation from processing logic
+│       │   └── Classification: Benefits
+│       │
+│       └── Support for Inheritance
+│           ├── Theme: Supporting matching across class hierarchies
+│           └── Classification: Benefits

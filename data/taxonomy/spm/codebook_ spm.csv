@@ -1,0 +1,100 @@
+Theme,Group,Code,Definition,Criteria
+Informal Semantics of Structural Pattern Matching,Pattern Matching Process,Pattern Matching Process,Defines the general mechanism used by structural pattern matching to evaluate patterns against subjects.,Apply when the excerpt explains the overall matching process.
+Informal Semantics of Structural Pattern Matching,Outcome,Success or Failure,Represents whether a pattern successfully matches or fails against a subject.,Apply when describing the result of a matching attempt.
+Informal Semantics of Structural Pattern Matching,Subpattern Evaluation,Left-to-right Matching,Defines that subpatterns may be evaluated sequentially from left to right.,Apply when the excerpt discusses evaluation order.
+Informal Semantics of Structural Pattern Matching,Outcome,Name Binding,Describes the creation of variable bindings from values extracted during matching.,Apply when matching assigns values to names.
+Informal Semantics of Structural Pattern Matching,Match Statement Execution,Subject Expression Evaluation,Describes evaluation of the expression provided to the match statement.,Apply when discussing evaluation of the matched object.
+Informal Semantics of Structural Pattern Matching,Match Statement Execution,Guard Evaluation,Describes the evaluation of guards associated with case clauses.,Apply when discussing additional conditions after matching.
+Missing or Deferred Specification,Implementation Flexibility,Unspecified Behavior for Failed Matches,Represents behavior intentionally left unspecified when matches fail.,Apply when the specification allows implementation differences.
+Missing or Deferred Specification,Implementation Flexibility,Missing or Deferred Specification,Indicates areas where Python implementations may define behavior differently.,Apply when behavior is not fully specified.
+Missing or Deferred Specification,Implementation Flexibility,Undefined Method Calls Behavior,Represents unspecified behavior involving method calls during matching.,Apply when the specification does not define exact method invocation behavior.
+Missing or Deferred Specification,Implementation Behavior,Undefined Binding Behavior in Failed Matches,Represents undefined variable states after failed matching attempts.,Apply when discussing unreliable bindings after failure.
+Practice,Developer Guidance,Avoid Reliance on Failed Match Bindings,Recommends that developers should not depend on bindings created during failed matches.,Apply to developer recommendations.
+Practice,Developer Guidance,Recommendation for Python Developers,General guidance provided to Python programmers regarding safe pattern matching usage.,Apply when the PEP provides programming recommendations.
+Structural Pattern Matching and Side Effects,Implementation Behavior,Implicit Operations During Matching,Describes hidden operations performed internally during matching.,Apply when discussing implementation actions.
+Structural Pattern Matching and Side Effects,Matching Process Behavior,Explicit Side Effects through Name Binding,Describes observable effects caused by variable assignment during matching.,Apply when discussing bindings as effects.
+Informal Semantics of Structural Pattern Matching,Pattern Classification,Irrefutable Patterns,Defines patterns that always succeed when evaluated.,Apply when discussing patterns that cannot fail.
+Syntax of Structural Pattern Matching,Pattern Grammar,Pattern Syntax Definition,Defines the grammar and valid syntax forms for patterns.,Apply when describing pattern language structure.
+Syntax of Structural Pattern Matching,Pattern Grammar,AS Pattern Syntax,Defines syntax rules for AS patterns.,"Apply when discussing the use of ""as"" in patterns."
+Informal Semantics of Structural Pattern Matching,Outcome,AS Pattern Success and Name Binding,Defines behavior of AS patterns when matching and binding values.,Apply when discussing captured values using AS patterns.
+Match Statement Grammar,Match/Case Syntax,Syntax of Structural Pattern Matching,Defines the grammar rules for match and case statements.,Apply when discussing formal syntax.
+Syntax of Structural Pattern Matching,Match/Case Syntax,Structural Pattern Matching is a new compound statement,Represents the introduction of match/case as a new compound statement in Python.,Apply when discussing language evolution.
+Design Decision,Syntax,Indentation,Represents indentation-related syntax decisions for match statements.,Apply when discussing formatting choices.
+Design Decision,Syntax,Syntax Design Choices,Represents general syntax decisions made during language design.,Apply when discussing rejected or accepted syntax alternatives.
+Design Decision,Syntax,Keyword Selection,Represents decisions regarding selection of syntax keywords.,Apply when discussing keyword alternatives.
+Design Decision,Syntax,Scope Design,Defines decisions regarding variable scope and visibility.,Apply when discussing scope behavior.
+Design Decision,Syntax,Additional Alternatives to Combine Patterns (Rejected),Represents rejected syntax alternatives for combining patterns.,Apply when discussing discarded proposals.
+Benefits,Motivation,Improve Code Elegance,Represents the motivation of making code more expressive and elegant through structural pattern matching.,Apply when the excerpt argues that pattern matching improves code quality or elegance.
+Benefits,Motivation,Improve Code Readability,Represents improvements in code understanding and readability provided by pattern matching.,Apply when the excerpt discusses clearer program representation.
+Benefits,Motivation,Improve Code Brevity,Represents reduction in code size achieved through pattern matching constructs.,Apply when the excerpt highlights shorter implementations.
+Benefits,Motivation,Reduce Boilerplate Code,Represents elimination of repetitive programming structures such as long conditional chains.,Apply when pattern matching replaces repetitive code.
+Benefits,Motivation,Complementary to Object-Oriented Programming,Represents integration of structural pattern matching with object-oriented programming approaches.,Apply when discussing coexistence with OOP.
+Benefits,Motivation,Improve Separation of Concerns,Represents the ability to separate data structure analysis from processing logic.,Apply when pattern matching improves organization of responsibilities.
+Benefits,Motivation,Support for Built-in Types,Represents support for matching Python built-in data structures and values.,Apply when discussing matching of native Python objects.
+Benefits,Motivation,Structural Matching Beyond Class-Based Dispatch,Represents matching based on structure rather than only class hierarchy.,Apply when contrasting structural matching with traditional dispatch.
+Benefits,Motivation,Support for Inheritance,Represents compatibility between pattern matching and inheritance relationships.,Apply when discussing class hierarchies.
+Benefits,Motivation,Support for Complex Data Structures,Represents support for decomposing nested and complex structures.,Apply when discussing recursive or nested data.
+Benefits,Motivation,Support for Multiple Programming Styles and Data Representations,Represents flexibility across different programming paradigms and representations.,Apply when discussing broad applicability.
+Benefits,Motivation,Support Functional Programming Style,Represents alignment with functional programming concepts such as decomposition and matching.,Apply when discussing functional programming influence.
+Limitations,Alternative Approaches,Visitor Pattern Insufficient Flexibility,Represents limitations of the Visitor pattern as an alternative approach.,Apply when comparing pattern matching with Visitor.
+Limitations,Alternative Approaches,Multi-dispatch Compared to Single-dispatch,Represents comparison between dispatch approaches and pattern matching.,Apply when discussing dispatch mechanisms.
+Informal Semantics of Structural Pattern Matching,Key Feature,Nested sub-pattern,Represents the ability to compose patterns inside other patterns.,Apply when patterns contain nested structures.
+Informal Semantics of Structural Pattern Matching,Key Feature,Name Binding,Represents extraction and assignment of values during matching.,Apply when describing captured values.
+Informal Semantics of Structural Pattern Matching,Key Feature,First-to-match Rule,Represents sequential evaluation where the first successful case is executed.,Apply when discussing case selection order.
+Informal Semantics of Structural Pattern Matching,Key Feature,No Side-effects While Pattern Matching,Represents the design principle that matching itself should not modify data.,Apply when discussing side-effect avoidance.
+Design Decision,Patterns,Balancing Declarative Patterns and Python Dynamic Semantics,Represents decisions balancing declarative matching syntax with Python's dynamic behavior.,Apply when discussing language design trade-offs.
+Design Decision,Patterns,Nested Pattern Composition,Represents decisions allowing patterns to be recursively combined.,Apply when discussing nested patterns.
+Design Decision,Patterns,OR Pattern Binding Rules,Defines restrictions and rules for variable binding in OR patterns.,Apply when discussing alternative pattern behavior.
+Design Decision,Patterns,Separating Patterns from Object Constructors,Represents the decision to separate matching syntax from object creation syntax.,Apply when discussing pattern independence from constructors.
+Design Decision,Literal Patterns,Literal Pattern,Defines patterns based on matching literal values.,Apply when discussing constant matching.
+Design Decision,Literal Patterns,Identity vs Equality Matching,Defines when matching uses identity comparison or equality comparison.,Apply when discussing comparison semantics.
+Design Decision,Literal Patterns,Use of Equality Operator for Literal Patterns,Defines that literal values are compared using equality.,Apply when discussing literal comparison.
+Design Decision,Literal Patterns,Range Matching Patterns (Rejected),Represents rejected proposals for range-based patterns.,Apply when discussing alternatives not adopted.
+Design Decision,Patterns,Capture Pattern,Defines patterns that capture matched values into variables.,Apply when discussing variable extraction.
+Design Decision,Patterns,Capture as Default Behavior,Represents the decision that unqualified names capture values by default.,Apply when discussing capture semantics.
+Design Decision,Patterns,Rejecting Explicit Capture Pattern Markers,"Represents rejection of explicit markers such as ?, $, or = for capture variables.",Apply when discussing syntax proposals for capture markers.
+Design Decision,Patterns,Prohibiting Repeated Capture Variable Names,Represents restriction against repeated variable names in patterns.,Apply when discussing duplicate bindings.
+Design Decision,Patterns,Value Pattern,Defines patterns that compare against previously defined values.,Apply when discussing constant-like matching.
+Design Decision,Patterns,Distinguishing Capture and Value Patterns,Represents rules used to differentiate variables from constants.,Apply when discussing ambiguity resolution.
+Design Decision,Wildcard Patterns,Wildcard Pattern,Defines a pattern that matches any value without creating bindings.,Apply when discussing ignored values.
+Design Decision,OR Patterns,Alternative Pattern Composition,Represents combining multiple possible patterns into one alternative.,Apply when discussing OR pattern syntax.
+Design Decision,OR Patterns,Combining Alternative Patterns,Represents the ability to express multiple matching alternatives.,Apply when discussing pattern combinations.
+Design Decision,AS Patterns,Capturing Values from Matched Patterns,Represents capturing an entire matched pattern using AS syntax.,Apply when discussing AS pattern usage.
+Design Decision,Sequence Patterns,Reuse of Iterable Unpacking Semantics,Represents the reuse of iterable unpacking concepts in sequence patterns.,Apply when the excerpt discusses similarity between matching and unpacking.
+Design Decision,Sequence Patterns,Reuse of Iterable Unpacking Syntax,Represents adoption of existing unpacking syntax for sequence patterns.,Apply when discussing syntax reuse.
+Key Feature,Sequence Patterns,Structural Matching of Sequences,Represents the ability to match and decompose sequence structures.,"Apply when describing matching of lists, tuples, and sequences."
+Design Decision,Sequence Patterns,Restricting Multiple Starred Patterns,Represents the restriction of multiple starred patterns in sequences.,Apply when discussing ambiguity or performance concerns.
+Design Decision,Sequence Patterns,Matching Only Sequence Objects,Represents limitation of sequence patterns to sequence objects.,Apply when discussing supported subject types.
+Design Decision,Sequence Patterns,Excluding Strings and Bytes from Sequence Patterns,Represents exclusion of strings and bytes from sequence matching.,Apply when discussing special treatment of string-like objects.
+Design Decision,Mapping Patterns,Matching Mappings by Keys,Represents extraction of values from mappings using keys.,Apply when discussing dictionary matching.
+Design Decision,Mapping Patterns,Restricting Mapping Pattern Keys to Literals and Value Patterns,Represents restrictions on valid mapping keys in patterns.,Apply when discussing key syntax limitations.
+Design Decision,Mapping Patterns,Avoiding Side Effects During Key Lookup,Represents decisions preventing unexpected side effects during mapping access.,Apply when discussing safe lookup behavior.
+Design Decision,Mapping Patterns,Ignoring Extra Mapping Keys,Represents behavior where additional keys do not prevent matching.,Apply when discussing mapping flexibility.
+Design Decision,Class Patterns,Combining Instance Checks and Attribute Extraction,Represents combining type verification with attribute extraction.,Apply when discussing class pattern purpose.
+Design Decision,Class Patterns,Matching Object Types and Attributes,Represents matching objects based on their type and attributes.,Apply when discussing object pattern behavior.
+Design Decision,Class Patterns,Using Class Patterns for Type Validation,Represents the use of class patterns as type checks.,Apply when discussing validation through patterns.
+Design Decision,Class Patterns,Supporting Attribute-Based Matching with Object Patterns,Represents direct matching of object attributes.,Apply when discussing object structure constraints.
+Design Decision,Class Patterns,Named Attribute Patterns,Represents patterns using explicitly named attributes.,Apply when discussing keyword-style attribute matching.
+Design Decision,Class Patterns,Positional Attribute Matching,Represents matching attributes based on position.,Apply when discussing positional extraction.
+Design Decision,Class Patterns,Supporting Positional Attribute Matching,Represents support for positional object attribute matching.,Apply when discussing positional patterns.
+Design Decision,Class Patterns,Positional Class Patterns and Object Structure,Represents challenges related to ordering attributes in Python objects.,Apply when discussing limitations of positional matching.
+Design Decision,Class Patterns,Positional Patterns with match_args,Represents use of __match_args__ to define positional attributes.,Apply when discussing match_args behavior.
+Design Decision,Class Patterns,Using isinstance() and __match_args__ for Class Patterns,Represents implementation strategy for class patterns.,Apply when discussing internal mechanism.
+Design Decision,Class Patterns,Mirroring Construction and Deconstruction Syntax,Represents the decision that object matching syntax resembles object construction syntax.,Apply when discussing consistency of Python syntax.
+Design Decision,Value Patterns,Using Qualified Names for Constant Matching,Represents use of qualified names to identify constant values.,Apply when discussing dotted names as value patterns.
+Design Decision,Value Patterns,Value Pattern,Represents matching against predefined constant values.,Apply when discussing constant matching behavior.
+Design Decision,Guards,Adding Conditions to Case Clauses,Represents additional conditions evaluated after successful matching.,Apply when discussing guards.
+Design Decision,Match Statement,First Matching Case Selection,Represents execution of the first case whose pattern succeeds.,Apply when discussing case evaluation order.
+Design Decision,Wildcard Patterns,Wildcard Pattern Matching,Represents wildcard behavior that accepts any subject without binding.,Apply when describing default matching.
+Design Decision,Patterns,Nested Pattern Composition,Represents ability to combine multiple patterns hierarchically.,Apply when discussing nested matching structures.
+Design Decision,Patterns,Rejecting Type Annotations in Patterns,Represents rejection of type annotations directly inside patterns.,Apply when discussing rejected syntax proposals.
+Design Decision,Patterns,Distinguishing Capture and Value Patterns,Represents mechanisms to determine whether a name captures or compares.,Apply when discussing name interpretation.
+Design Decision,Patterns,Separating Patterns from Object Constructors,Represents independence between matching syntax and object construction.,Apply when discussing language design.
+Design Decision,Class Patterns,Supporting Attribute-Based Matching with Object Patterns,Represents direct object attribute constraints.,Apply when discussing object-oriented matching.
+Design Decision,Class Patterns,Matching Object Types and Attributes,Represents simultaneous type and attribute matching.,Apply when discussing class patterns.
+Design Decision,Class Patterns,Using Class Patterns for Type Validation,Represents validation of object types through matching.,Apply when discussing isinstance-like behavior.
+Design Decision,Patterns,Wildcard Pattern,Defines the wildcard pattern behavior that matches any value without creating a variable binding,Apply when the excerpt discusses the use or semantics of wildcard patterns that ignore matched values.
+Informal Semantics of Structural Pattern Matching,Outcome,Partial Bindings in Failed Matches,Describes situations where some variables may be bound even when the overall pattern matching attempt fails.,Apply when the excerpt discusses partial variable bindings resulting from unsuccessful matches.
+Missing or Deferred Specification ,Implementation Flexibility ,Missing or Deferred Specification,Indicates aspects of structural pattern matching whose behavior is intentionally not fully defined by the specification.,Apply when the excerpt states that implementations may differ or that certain behaviors are left unspecified.
+Soft Keywords,Keyword Handling,Soft Keywords,Defines the use of contextual keywords that behave as keywords only in specific syntactic contexts.,Apply when the excerpt discusses match and case as soft keywords to preserve backward compatibilit
+Guard Behavior,case expressions might have side effects,Design Decision,Discusses the design decision that guard expressions (if clauses in case statements) are allowed to produce side effects because they are ordinary Python expressions evaluated only after a successful pattern match.,"Apply when the text explains, justifies, or discusses that guard expressions may execute arbitrary code or produce side effects during evaluation."

@@ -1,0 +1,424 @@
+document,quotation,Group,Codes,Themes
+634,The pattern matching process takes as input a pattern (following case) and a subject value (following match). Phrases to describe the process include “the pattern is matched with (or against) the subject value” and “we match the pattern against (or with) the subject value”.,Pattern Matching Process,Pattern Matching Process,Informal Semantics of Structural Pattern Matching
+634,"The primary outcome of pattern matching is success or failure. In case of success we may say “the pattern succeeds”, “the match succeeds”, or “the pattern matches the subject value”.",Outcome,Success or Failure,Informal Semantics of Structural Pattern Matching
+634,"In many cases a pattern contains subpatterns, and success or failure is determined by the success or failure of matching those subpatterns against the value (e.g., for OR patterns) or against parts of the value (e.g., for sequence patterns). This process typically processes the subpatterns from left to right until the overall outcome is determined. E.g., an OR pattern succeeds at the first succeeding subpattern, while a sequence patterns fails at the first failing subpattern.",Subpattern Evaluation,Left-to-right Matching,Informal Semantics of Structural Pattern Matching
+634,"A secondary outcome of pattern matching may be one or more name bindings. We may say “the pattern binds a value to a name”. When subpatterns tried until the first success, only the bindings due to the successful subpattern are valid; when trying until the first failure, the bindings are merged. Several more rules, explained below, apply to these cases.",Outcome,Name Binding,Informal Semantics of Structural Pattern Matching
+634,"match_stmt: ""match"" subject_expr ':' NEWLINE INDENT case_block+ DEDENT subject_expr:     | star_named_expression ',' star_named_expressions?     | named_expression case_block: ""case"" patterns [guard] ':' block guard: 'if' named_expression ",Match/Case Syntax,Syntax of structural pattern matching,Match Statement Grammar
+634,Structural Pattern Matching is a new compound statement,Match/Case Syntax,Structural Pattern Matching is a new compound statement,Syntax of Structural Pattern Matching
+634,"The match and case keywords are soft keywords, i.e. they are not reserved words in other grammatical contexts (including at the start of a line if there is no colon where expected). This implies that they are recognized as keywords when part of a match statement or case block only, and are allowed to be used in all other contexts as variable or argument names.",Keyword Handling,Design decision,Soft Keywords
+634,The match statement first evaluates the subject expression. If a comma is present a tuple is constructed using the standard rules.,Match Statement Execution,Subject Expression Evaluation,Informal Semantics of Structural Pattern Matching
+634,"During failed pattern matches, some subpatterns may succeed. For example, while matching the pattern (0, x, 1) with the value [0, 1, 2], the subpattern x may succeed if the list elements are matched from left to right. The implementation may choose to either make persistent bindings for those partial matches or not. User code including a match statement should not rely on the bindings being made for a failed match, but also shouldn’t assume that variables are unchanged by a failed match. This part of the behavior is left intentionally unspecified so different implementations can add optimizations, and to prevent introducing semantic restrictions that could limit the extensibility of this feature.",Outcome,Partial Bindings in Failed Matches,Informal Semantics of Structural Pattern Matching
+634,,Outcome,Partial Bindings in Failed Matches,Informal Semantics of Structural Pattern Matching
+634,,Implementation Flexibility,Unspecified Behavior for Failed Matches,Missing or Deferred Specification
+634,,Developer Guidance,Avoid Reliance on Failed Match Bindings,Practice
+634,"User code including a match statement should not rely on the bindings being made for a failed match, but also shouldn’t assume that variables are unchanged by a failed match",Developer Guidance,Recommendation for Python Developers,Practice
+634,"This part of the behavior is left intentionally unspecified so different implementations can add optimizations, and to prevent introducing semantic restrictions that could limit the extensibility of this feature.",Implementation Flexibility,Missing or Deferred Specification,Missing or Deferred Specification
+634,"If a guard is present on a case block, once the pattern or patterns in the case block succeed, the expression in the guard is evaluated. If this raises an exception, the exception bubbles up. Otherwise, if the condition is “truthy” the case block is selected; if it is “falsy” the case block is not selected.",Match Statement Execution,Guard Evaluation,Informal Semantics of Structural Pattern Matching
+634,Since guards are expressions they are allowed to have side effects,Guard Behavior,case expressions might have side effects,Design Decision
+634,"A pattern is considered irrefutable if we can prove from its syntax alone that it will always succeed. In particular, capture patterns and wildcard patterns are irrefutable, and so are AS patterns whose left-hand side is irrefutable, OR patterns containing at least one irrefutable pattern, and parenthesized irrefutable patterns.
+
+A case block is considered irrefutable if it has no guard and its pattern is irrefutable.
+
+A match statement may have at most one irrefutable case block, and it must be last.",Pattern Classification,Irrefutable Patterns,Informal Semantics of Structural Pattern Matching
+634,"The top-level syntax for patterns is as follows:
+
+patterns: open_sequence_pattern | pattern pattern: as_pattern | or_pattern as_pattern: or_pattern 'as' capture_pattern or_pattern: '|'.closed_pattern+ closed_pattern:     | literal_pattern     | capture_pattern     | wildcard_pattern     | value_pattern     | group_pattern     | sequence_pattern     | mapping_pattern     | class_pattern ",Pattern Grammar,Pattern Syntax Definition,Syntax of Structural Pattern Matching
+634,"Syntax:
+
+as_pattern: or_pattern 'as' capture_pattern 
+
+(Note: the name on the right may not be _.)",Pattern Grammar,AS Pattern Syntax,Syntax of Structural Pattern Matching
+634,"An AS pattern matches the OR pattern on the left of the as keyword against the subject. If this fails, the AS pattern fails. Otherwise, the AS pattern binds the subject to the name on the right of the as keyword and succeeds.",Outcome,AS Pattern Success and Name Binding,Informal Semantics of Structural Pattern Matching
+634,This proposal intentionally leaves out any specification of what methods are called or how many times. This behavior is therefore undefined and user code should not rely on it.,Implementation Flexibility,Undefined Method Calls Behavior,Missing or Deferred Specification
+634,This proposal intentionally leaves out any specification of what methods are called or how many times. This behavior is therefore undefined and user code should not rely on it.,Developer Guidance,Recommendation for Python Developers,Practice
+634,"The only side-effect produced explicitly by the matching process is the binding of names. However, the process relies on attribute access, instance checks, len(), equality and item access on the subject and some of its components. It also evaluates value patterns and the class name of class patterns.",Matching Process Behavior,Explicit Side Effects through Name Binding,Structural Pattern Matching and Side Effects
+634,"The only side-effect produced explicitly by the matching process is the binding of names. However, the process relies on attribute access, instance checks, len(), equality and item access on the subject and some of its components. It also evaluates value patterns and the class name of class patterns.",Implementation Behavior,Implicit Operations During Matching,Structural Pattern Matching and Side Effects
+634,"Another undefined behavior is the binding of variables by capture patterns that are followed (in the same case block) by another pattern that fails. These may happen earlier or later depending on the implementation strategy, the only constraint being that capture variables must be set before guards that use them explicitly are evaluated. If a guard consists of an and clause, evaluation of the operands may even be interspersed with pattern matching, as long as left-to-right evaluation order is maintained.",Implementation Behavior,Undefined Binding Behavior in Failed Matches,Missing or Deferred Specification
+634,"Another undefined behavior is the binding of variables by capture patterns that are followed (in the same case block) by another pattern that fails. These may happen earlier or later depending on the implementation strategy, the only constraint being that capture variables must be set before guards that use them explicitly are evaluated. If a guard consists of an and clause, evaluation of the operands may even be interspersed with pattern matching, as long as left-to-right evaluation order is maintained.",Developer Guidance,Recommendation for Python Developers,Practice
+635,Code like this is more elegantly rendered using match:,Motivation,Improve Code Elegance,Benefits
+635,"AST traversal code often looks for nodes matching a given pattern, for example the code to detect a node of the shape “A + B * C” might look like this:
+
+if (isinstance(node, BinOp) and node.op == ""+""         and isinstance(node.right, BinOp) and node.right.op == ""*""):     a, b, c = node.left, node.right.left, node.right.right     # Handle a + b*c 
+
+Using match this becomes more readable:",Motivation,Improve code readability,Benefits
+635,"We believe that adding pattern matching to Python will enable Python users to write cleaner, more readable code for examples like those above, and many others.",Motivation,Improve Code Elegance,Benefits
+635,"We believe that adding pattern matching to Python will enable Python users to write cleaner, more readable code for examples like those above, and many others.",Motivation,Improve code readability,Benefits
+635,"Pattern matching is complimentary to the object-oriented paradigm. Using OO and inheritance we can easily define a method on a base class that defines default behavior for a specific operation on that class, and we can override this default behavior in subclasses. We can also use the Visitor pattern to separate actions from data.",Motivation,Complementary to Object-Oriented Programming,Benefits
+635,"But this is not sufficient for all situations. For example, a code generator may consume an AST, and have many operations where the generated code needs to vary based not just on the class of a node, but also on the value of some class attributes, like the BinOp example above. The Visitor pattern is insufficiently flexible for this: it can only select based on the class.",Alternative Approaches,Visitor Pattern Insufficient Flexibility,Limitations
+635,allows for a strict separation of concerns: specific actions or data processing is independent of the class hierarchy or manipulated objects,Motivation,Improve separation of concerns,Benefits
+635,Pattern matching not only relieves the programmer or class designer from the burden of the boilerplate code needed for the Visitor pattern,Motivation,Reduce Boilerplate Code,Benefits
+635,but is also flexible enough to directly work with built-in types.,Motivation,Support for Built-in Types,Benefits
+635,"naturally distinguishes between sequences of different lengths, which might all share the same class despite obviously differing structures",Motivation,Structural Matching Beyond Class-Based Dispatch,Benefits
+635,"Moreover, pattern matching automatically takes inheritance into account: a class D inheriting from C will be handled by a pattern that targets C by default.",Motivation,Support for Inheritance,Benefits
+635,"Object oriented programming is geared towards single-dispatch: it is a single instance (or the type thereof) that determines which method is to be called. This leads to a somewhat artificial situation in case of binary operators where both objects might play an equal role in deciding which implementation to use (Python addresses this through the use of reversed binary methods). Pattern matching is structurally better suited to handle such situations of multi-dispatch, where the action to be taken depends on the types of several objects to equal parts.",Alternative Approaches,Multi-dispatch Compared to Single-dispatch,Limitations
+635,"Pattern matching is particularly suitable for picking apart such data structures. As an extreme example, it’s easy to write code that picks a JSON data structure using match:",Motivation,Support for Complex Data Structures,Benefits
+635,"Many Python applications and libraries are not written in a consistent OO style – unlike Java, Python encourages defining functions at the top-level of a module, and for simple data structures, tuples (or named tuples or lists) and dictionaries are often used exclusively or mixed with classes or data classes.",Motivation,Support for Multiple Programming Styles and Data Representations,Benefits
+635,Functional programming generally prefers a declarative style with a focus on relationships in data. Side effects are avoided whenever possible. Pattern matching thus naturally fits and highly supports functional programming style.,Motivation,Support Functional Programming Style,Benefits
+635,"Much of the power of pattern matching comes from the nesting of subpatterns. That the success of a pattern match depends directly on the success of subpattern is thus a cornerstone of the design. However, although a pattern like P(Q(), R()) succeeds only if both subpatterns Q() and R() succeed (i.e. the success of pattern P depends on Q and R), the pattern P is checked first. If P fails, neither Q() nor R() will be tried (this is a direct consequence of the fact that if P fails, there are no subjects to match against Q() and R() in the first place).",Key Feature,Nested sub-pattern,Informal Semantics of Structural Pattern Matching
+635,"Also note that patterns bind names to values rather than performing an assignment. This reflects the fact that patterns aim to not have side effects, which also means that Capture or AS patterns cannot assign a value to an attribute or subscript. We thus consistently use the term ‘bind’ instead of ‘assign’ to emphasise this subtle difference between traditional assignments and name binding in patterns.",Key Feature,Name Binding,Informal Semantics of Structural Pattern Matching
+635,"Various suggestions have sought to eliminate or avoid the naturally arising “double indentation” of a case clause’s code block. Unfortunately, all such proposals of flat indentation schemes come at the expense of violating Python’s established structural paradigm, leading to additional syntactic rules:
+
+Unindented case clauses. 
+
+The idea is to align case clauses with the match, i.e.:
+
+match expression: case pattern_1:     ... case pattern_2:     ... 
+
+This may look awkward to the eye of a Python programmer, because everywhere else a colon is followed by an indent. The match would neither follow the syntactic scheme of simple nor composite statements but rather establish a category of its own.
+
+Putting the expression on a separate line after “match”. 
+
+The idea is to use the expression yielding the subject as a statement to avoid the singularity of match having no actual block despite the colons:
+
+match:     expression case pattern_1:     ... case pattern_2:     ... 
+
+This was ultimately rejected because the first block would be another novelty in Python’s grammar: a block whose only content is a single expression rather than a sequence of statements. Attempts to amend this issue by adding or repurposing yet another keyword along the lines of match: return expression did not yield any satisfactory solution.
+
+Although flat indentation would save some horizontal space, the cost of increased complexity or unusual rules is too high. It would also complicate life for simple-minded code editors. Finally, the horizontal space issue can be alleviated by allowing “half-indent” (i.e. two spaces instead of four) for match statements (though we do not recommend this).",Syntax,Indentation,Design Decision
+635,"Various suggestions have sought to eliminate or avoid the naturally arising “double indentation” of a case clause’s code block. Unfortunately, all such proposals of flat indentation schemes come at the expense of violating Python’s established structural paradigm, leading to additional syntactic rules:
+
+Unindented case clauses. 
+
+The idea is to align case clauses with the match, i.e.:
+
+match expression: case pattern_1:     ... case pattern_2:     ... 
+
+This may look awkward to the eye of a Python programmer, because everywhere else a colon is followed by an indent. The match would neither follow the syntactic scheme of simple nor composite statements but rather establish a category of its own.
+
+Putting the expression on a separate line after “match”. 
+
+The idea is to use the expression yielding the subject as a statement to avoid the singularity of match having no actual block despite the colons:
+
+match:     expression case pattern_1:     ... case pattern_2:     ... 
+
+This was ultimately rejected because the first block would be another novelty in Python’s grammar: a block whose only content is a single expression rather than a sequence of statements. Attempts to amend this issue by adding or repurposing yet another keyword along the lines of match: return expression did not yield any satisfactory solution.
+
+Although flat indentation would save some horizontal space, the cost of increased complexity or unusual rules is too high. It would also complicate life for simple-minded code editors. Finally, the horizontal space issue can be alleviated by allowing “half-indent” (i.e. two spaces instead of four) for match statements (though we do not recommend this).",Syntax,Syntax Design Choices,Design Decision
+635,This was ultimately rejected because the first block would be another novelty in Python’s grammar: a block whose only content is a single expression rather than a sequence of statements. Attempts to amend this issue by adding or repurposing yet another keyword along the lines of match: return expression did not yield any satisfactory solution.,Syntax,Syntax Design Choices,Design Decision
+635,"Although flat indentation would save some horizontal space, the cost of increased complexity or unusual rules is too high. It would also complicate life for simple-minded code editors. Finally, the horizontal space issue can be alleviated by allowing “half-indent” (i.e. two spaces instead of four) for match statements (though we do not recommend this).",Syntax,Syntax Design Choices,Design Decision
+635,"In sample programs using match, written as part of the development of this PEP, a noticeable improvement in code brevity is observed, more than making up for the additional indentation level.",Motivation,Improve Code Brevity,Benefits
+635,"Some suggestions centered around the idea of making match an expression rather than a statement. However, this would fit poorly with Python’s statement-oriented nature and lead to unusually long and complex expressions and the need to invent new syntactic constructs or break well established syntactic rules. An obvious consequence of match as an expression would be that case clauses could no longer have arbitrary blocks of code attached, but only a single expression. Overall, the strong limitations could in no way offset the slight simplification in some special use cases.",Syntax,Syntax Design Choices,Design Decision
+635,"There were options to make match a hard keyword, or choose a different keyword. Although using a hard keyword would simplify life for simple-minded syntax highlighters, we decided not to use hard keyword for several reasons:
+
+Most importantly, the new parser doesn’t require us to do this. Unlike with async that caused hardships with being a soft keyword for few releases, here we can make match a permanent soft keyword.
+
+match is so commonly used in existing code, that it would break almost every existing program and will put a burden to fix code on many people who may not even benefit from the new syntax.
+
+It is hard to find an alternative keyword that would not be commonly used in existing programs as an identifier, and would still clearly reflect the meaning of the statement.",Syntax,Keyword Selection,Design Decision
+635,"Use “as” or “|” instead of “case” for case clauses. The pattern matching proposed here is a combination of multi-branch control flow (in line with switch in Algol-derived languages or cond in Lisp) and object-deconstruction as found in functional languages. While the proposed keyword case highlights the multi-branch aspect, alternative keywords such as as would equally be possible, highlighting the deconstruction aspect. as or with, for instance, also have the advantage of already being keywords in Python. However, since case as a keyword can only occur as a leading keyword inside a match statement, it is easy for a parser to distinguish between its use as a keyword or as a variable.
+
+Other variants would use a symbol like | or =>, or go entirely without special marker.
+
+Since Python is a statement-oriented language in the tradition of Algol, and as each composite statement starts with an identifying keyword, case seemed to be most in line with Python’s style and traditions.",Syntax,Keyword Selection,Design Decision
+635,"The patterns of different case clauses might overlap in that more than one case clause would match a given subject. The first-to-match rule ensures that the selection of a case clause for a given subject is unambiguous. Furthermore, case clauses can have increasingly general patterns matching wider sets of subjects. The first-to-match rule then ensures that the most precise pattern can be chosen (although it is the programmer’s responsibility to order the case clauses correctly).",Key Feature,First-to-match Rule,Informal Semantics of Structural Pattern Matching
+635,"In a statically typed language, the match statement would be compiled to a decision tree to select a matching pattern quickly and very efficiently. This would, however, require that all patterns be purely declarative and static, running against the established dynamic semantics of Python. The proposed semantics thus represent a path incorporating the best of both worlds: patterns are tried in a strictly sequential order so that each case clause constitutes an actual statement. At the same time, we allow the interpreter to cache any information about the subject or change the order in which subpatterns are tried. In other words: if the interpreter has found that the subject is not an instance of a class C, it can directly skip case clauses testing for this again, without having to perform repeated instance-checks. If a guard stipulates that a variable x must be positive, say (i.e. if x > 0), the interpreter might check this directly after binding x and before any further subpatterns are considered.",Patterns,Balancing Declarative Patterns and Python Dynamic Semantics,Design Decision
+635,"In many pattern matching implementations, each case clause would establish a separate scope of its own. Variables bound by a pattern would then only be visible inside the corresponding case block. In Python, however, this does not make sense. Establishing separate scopes would essentially mean that each case clause is a separate function without direct access to the variables in the surrounding scope (without having to resort to nonlocal that is). Moreover, a case clause could no longer influence any surrounding control flow through standard statement such as return or break. Hence, such strict scoping would lead to unintuitive and surprising behavior.
+
+A direct consequence of this is that any variable bindings outlive the respective case or match statements. Even patterns that only match a subject partially might bind local variables (this is, in fact, necessary for guards to function properly). However, these semantics for variable binding are in line with existing Python structures such as for loops and with statements.",Syntax,Scope Design,Design Decision
+635,"Some constraints cannot be adequately expressed through patterns alone. For instance, a ‘less’ or ‘greater than’ relationship defies the usual ‘equal’ semantics of patterns. Moreover, different subpatterns are independent and cannot refer to each other. The addition of guards addresses these restrictions: a guard is an arbitrary expression attached to a pattern and that must evaluate to a “truthy” value for the pattern to succeed.
+
+For example, case [x, y] if x < y: uses a guard (if x < y) to express a ‘less than’ relationship between two otherwise disjoint capture patterns x and y.
+
+From a conceptual point of view, patterns describe structural constraints on the subject in a declarative style, ideally without any side-effects. Recall, in particular, that patterns are clearly distinct from expressions, following different objectives and semantics. Guards then enhance case blocks in a highly controlled way with arbitrary expressions (that might have side effects). Splitting the overall functionality into a static structural and a dynamically evaluated part not only helps with readability, but can also introduce dramatic potential for compiler optimizations. To keep this clear separation, guards are only supported on the level of case clauses and not for individual patterns.",Key Feature,No Side-effects While Pattern Matching,Informal Semantics of Structural Pattern Matching
+635,"Patterns differ from assignment targets (as in iterable unpacking) in two ways: they impose additional constraints on the structure of the subject, and a subject may safely fail to match a specific pattern at any point (in iterable unpacking, this constitutes an error). The latter means that pattern should avoid side effects wherever possible.",Key Feature,No Side-effects While Pattern Matching,Informal Semantics of Structural Pattern Matching
+635,"This desire to avoid side effects is one reason why capture patterns don’t allow binding values to attributes or subscripts: if the containing pattern were to fail in a later step, it would be hard to revert such bindings.",Key Feature,No Side-effects While Pattern Matching,Informal Semantics of Structural Pattern Matching
+635,"A cornerstone of pattern matching is the possibility of arbitrarily nesting patterns. The nesting allows expressing deep tree structures (for an example of nested class patterns, see the motivation section above) as well as alternatives.",Key Feature,Nested sub-pattern,Informal Semantics of Structural Pattern Matching
+635,"In an earlier version, the AS pattern was devised as a ‘Walrus pattern’, written as case [first:=int(), second:=int()]. However, using as offers some advantages over :=:
+
+The walrus operator := is used to capture the result of an expression on the right hand side, whereas as generally indicates some form of ‘processing’ as in import foo as bar or except E as err:. Indeed, the pattern P as x does not assign the pattern P to x, but rather the subject that successfully matches P.
+
+as allows for a more consistent data flow from left to right (the attributes in Class patterns also follow a left-to-right data flow).
+
+The walrus operator looks very similar to the syntax for matching attributes in the Class pattern, potentially leading to some confusion.
+
+Example using the AS pattern:
+
+def simplify_expr(tokens):     match tokens:         case [('('|'[') as l, *expr, (')'|']') as r] if (l+r) in ('()', '[]'):             return simplify_expr(expr)         case [0, ('+'|'-') as op, right]:             return UnaryOp(op, right)         case [(int() | float() as left) | Num(left), '+', (int() | float() as right) | Num(right)]:             return Num(left + right)         case [(int() | float()) as value]:             return Num(value) 
+",Syntax,Syntax Design Choices,Design Decision
+635,"The OR pattern allows you to combine ‘structurally equivalent’ alternatives into a new pattern, i.e. several patterns can share a common handler. If any of an OR pattern’s subpatterns matches the subject, the entire OR pattern succeeds.
+
+Statically typed languages prohibit the binding of names (capture patterns) inside an OR pattern because of potential conflicts concerning the types of variables. As a dynamically typed language, Python can be less restrictive here and allow capture patterns inside OR patterns. However, each subpattern must bind the same set of variables so as not to leave potentially undefined names. With two alternatives P | Q, this means that if P binds the variables u and v, Q must bind exactly the same variables u and v.",Patterns,OR Pattern Binding Rules,Design Decision
+635,"There was some discussion on whether to use the bar symbol | or the or keyword to separate alternatives. The OR pattern does not fully fit the existing semantics and usage of either of these two symbols. However, | is the symbol of choice in all programming languages with support of the OR pattern and is used in that capacity for regular expressions in Python as well. It is also the traditional separator between alternatives in formal grammars (including Python’s). Moreover, | is not only used for bitwise OR, but also for set unions and dict merging (PEP 584).",Syntax,Syntax Design Choices,Design Decision
+635,"Other alternatives were considered as well, but none of these would allow OR-patterns to be nested inside other patterns:
+
+Using a comma:
+
+case 401, 403, 404:     print(""Some HTTP error"") 
+
+This looks too much like a tuple – we would have to find a different way to spell tuples, and the construct would have to be parenthesized inside the argument list of a class pattern. In general, commas already have many different meanings in Python, we shouldn’t add more.",Syntax,Syntax Design Choices,Design Decision
+635,"Using “case in” followed by a comma-separated list:
+
+case in 401, 403, 404:     print(""Some HTTP error"") 
+
+This would not work for OR patterns nested inside other patterns, like:
+
+case Point(0|1, 0|1):     print(""A corner of the unit square"") ",Syntax,Syntax Design Choices,Design Decision
+635,"Since this proposal defines an OR-pattern (|) to match one of several alternates, why not also an AND-pattern (&) or even a NOT-pattern (!)? Especially given that some other languages (F# for example) support AND-patterns.
+
+However, it is not clear how useful this would be. The semantics for matching dictionaries, objects and sequences already incorporates an implicit ‘and’: all attributes and elements mentioned must be present for the match to succeed. Guard conditions can also support many of the use cases that a hypothetical ‘and’ operator would be used for.
+
+A negation of a match pattern using the operator ! as a prefix would match exactly if the pattern itself does not match. For instance, !(3 | 4) would match anything except 3 or 4. However, there is evidence from other languages that this is rarely useful, and primarily used as double negation !! to control variable scopes and prevent variable bindings (which does not apply to Python). Other use cases are better expressed using guards.
+
+In the end, it was decided that this would make the syntax more complex without adding a significant benefit. It can always be added later.
+
+Example using the OR pattern:
+
+def simplify(expr):     match expr:         case ('/', 0, 0):             return expr         case ('*'|'/', 0, _):             return 0         case ('+'|'-', x, 0) | ('+', 0, x) | ('*', 1, x) | ('*'|'/', x, 1):             return x     return expr ",Syntax,Additional Alternatives to Combine Patterns (Rejected),Design Decision
+635,"Literal patterns are a convenient way for imposing constraints on the value of a subject, rather than its type or structure. They also allow you to emulate a switch statement using pattern matching.
+
+Generally, the subject is compared to a literal pattern by means of standard equality (x == y in Python syntax). Consequently, the literal patterns 1.0 and 1 match exactly the same set of objects, i.e. case 1.0: and case 1: are fully interchangeable. In principle, True would also match the same set of objects because True == 1 holds. However, we believe that many users would be surprised finding that case True: matched the subject 1.0, resulting in some subtle bugs and convoluted workarounds. We therefore adopted the rule that the three singleton patterns None, False and True match by identity (x is y in Python syntax) rather than equality. Hence, case True: will match only True and nothing else. Note that case 1: would still match True, though, because the literal pattern 1 works by equality and not identity.
+
+Early ideas to induce a hierarchy on numbers so that case 1.0 would match both the integer 1 and the floating point number 1.0, whereas case 1: would only match the integer 1 were eventually dropped in favor of the simpler and more consistent rule based on equality. Moreover, any additional checks whether the subject is an instance of numbers.Integral would come at a high runtime cost to introduce what would essentially be a novel idea in Python. When needed, the explicit syntax case int(1): can be used.
+
+Recall that literal patterns are not expressions, but directly denote a specific value. From a pragmatic point of view, we want to allow using negative and even complex values as literal patterns, but they are not atomic literals (only unsigned real and imaginary numbers are). E.g., -3+4j is syntactically an expression of the form BinOp(UnaryOp('-', 3), '+', 4j). Since expressions are not part of patterns, we had to add explicit syntactic support for such values without having to resort to full expressions.
+
+Interpolated f-strings, on the other hand, are not literal values, despite their appearance and can therefore not be used as literal patterns (string concatenation, however, is supported).
+
+Literal patterns not only occur as patterns in their own right, but also as keys in mapping patterns.
+
+Range matching patterns. This would allow patterns such as 1...6. However, there are a host of ambiguities:
+
+Is the range open, half-open, or closed? (I.e. is 6 included in the above example or not?)
+
+Does the range match a single number, or a range object?
+
+Range matching is often used for character ranges (‘a’…’z’) but that won’t work in Python since there’s no character data type, just strings.
+
+Range matching can be a significant performance optimization if you can pre-build a jump table, but that’s not generally possible in Python due to the fact that names can be dynamically rebound.",Literal Patterns,Identity vs Equality Matching,Design Decision
+635,"Generally, the subject is compared to a literal pattern by means of standard equality (x == y in Python syntax). Consequently, the literal patterns 1.0 and 1 match exactly the same set of objects, i.e. case 1.0: and case 1: are fully interchangeable. In principle, True would also match the same set of objects because True == 1 holds. However, we believe that many users would be surprised finding that case True: matched the subject 1.0, resulting in some subtle bugs and convoluted workarounds. We therefore adopted the rule that the three singleton patterns None, False and True match by identity (x is y in Python syntax) rather than equality. Hence, case True: will match only True and nothing else. Note that case 1: would still match True, though, because the literal pattern 1 works by equality and not identity.
+
+Early ideas to induce a hierarchy on numbers so that case 1.0 would match both the integer 1 and the floating point number 1.0, whereas case 1: would only match the integer 1 were eventually dropped in favor of the simpler and more consistent rule based on equality. Moreover, any additional checks whether the subject is an instance of numbers.Integral would come at a high runtime cost to introduce what would essentially be a novel idea in Python. When needed, the explicit syntax case int(1): can be used.
+
+Recall that literal patterns are not expressions, but directly denote a specific value. From a pragmatic point of view, we want to allow using negative and even complex values as literal patterns, but they are not atomic literals (only unsigned real and imaginary numbers are). E.g., -3+4j is syntactically an expression of the form BinOp(UnaryOp('-', 3), '+', 4j). Since expressions are not part of patterns, we had to add explicit syntactic support for such values without having to resort to full expressions.
+
+Interpolated f-strings, on the other hand, are not literal values, despite their appearance and can therefore not be used as literal patterns (string concatenation, however, is supported).
+
+Literal patterns not only occur as patterns in their own right, but also as keys in mapping patterns.",Literal Patterns,Use of Equality Operator for Literal Patterns,Design Decision
+635,"Range matching patterns. This would allow patterns such as 1...6. However, there are a host of ambiguities:
+
+Is the range open, half-open, or closed? (I.e. is 6 included in the above example or not?)
+
+Does the range match a single number, or a range object?
+
+Range matching is often used for character ranges (‘a’…’z’) but that won’t work in Python since there’s no character data type, just strings.
+
+Range matching can be a significant performance optimization if you can pre-build a jump table, but that’s not generally possible in Python due to the fact that names can be dynamically rebound.",Literal Patterns,Range Matching Patterns (Rejected),Design Decision
+635,"Capture patterns take on the form of a name that accepts any value and binds it to a (local) variable (unless the name is declared as nonlocal or global). In that sense, a capture pattern is similar to a parameter in a function definition (when the function is called, each parameter binds the respective argument to a local variable in the function’s scope).",Patterns,Capture Pattern,Design Decision
+635,"A name used for a capture pattern must not coincide with another capture pattern in the same pattern. This, again, is similar to parameters, which equally require each parameter name to be unique within the list of parameters. It differs, however, from iterable unpacking assignment, where the repeated use of a variable name as target is permissible (e.g., x, x = 1, 2). The rationale for not supporting (x, x) in patterns is its ambiguous reading: it could be seen as in iterable unpacking where only the second binding to x survives. But it could be equally seen as expressing a tuple with two equal elements (which comes with its own issues). Should the need arise, then it is still possible to introduce support for repeated use of names later on.",Patterns, Prohibiting Repeated Capture Variable Names,Design Decision
+635,"There were calls to explicitly mark capture patterns and thus identify them as binding targets. According to that idea, a capture pattern would be written as, e.g. ?x, $x or =x. The aim of such explicit capture markers is to let an unmarked name be a value pattern (see below). However, this is based on the misconception that pattern matching was an extension of switch statements, placing the emphasis on fast switching based on (ordinal) values. Such a switch statement has indeed been proposed for Python before (see PEP 275 and PEP 3103). Pattern matching, on the other hand, builds a generalized concept of iterable unpacking. Binding values extracted from a data structure is at the very core of the concept and hence the most common use case. Explicit markers for capture patterns would thus betray the objective of the proposed pattern matching syntax and simplify a secondary use case at the expense of additional syntactic clutter for core cases.",Patterns,Rejecting Explicit Capture Pattern Markers,Design Decision
+635,"It has been proposed that capture patterns are not needed at all, since the equivalent effect can be obtained by combining an AS pattern with a wildcard pattern (e.g., case _ as x is equivalent to case x). However, this would be unpleasantly verbose, especially given that we expect capture patterns to be very common.
+
+Example using Capture patterns:
+
+def average(*args):     match args:         case [x, y]:           # captures the two elements of a sequence             return (x + y) / 2         case [x]:              # captures the only element of a sequence             return x         case []:             return 0         case a:                # captures the entire sequence             return sum(a) / len(a) ",Patterns,Capture as Default Behavior,Design Decision
+635,"The wildcard pattern is a special case of a ‘capture’ pattern: it accepts any value, but does not bind it to a variable. The idea behind this rule is to support repeated use of the wildcard in patterns. While (x, x) is an error, (_, _) is legal.
+
+Particularly in larger (sequence) patterns, it is important to allow the pattern to concentrate on values with actual significance while ignoring anything else. Without a wildcard, it would become necessary to ‘invent’ a number of local variables, which would be bound but never used. Even when sticking to naming conventions and using e.g. _1, _2, _3 to name irrelevant values, say, this still introduces visual clutter and can hurt performance (compare the sequence pattern (x, y, *z) to (_, y, *_), where the *z forces the interpreter to copy a potentially very long sequence, whereas the second version simply compiles to code along the lines of y = seq[1]).
+
+There has been much discussion about the choice of the underscore as _ as a wildcard pattern, i.e. making this one name non-binding. However, the underscore is already heavily used as an ‘ignore value’ marker in iterable unpacking. Since the wildcard pattern _ never binds, this use of the underscore does not interfere with other uses such as inside the REPL or the gettext module.
+
+It has been proposed to use ... (i.e., the ellipsis token) or * (star) as a wildcard. However, both these look as if an arbitrary number of items is omitted:
+
+case [a, ..., z]: ... case [a, *, z]: ... 
+
+Either example looks like it would match a sequence of two or more items, capturing the first and last values. While that may be the ultimate “wildcard”, it does not convey the desired semantics.
+
+An alternative that does not suggest an arbitrary number of items would be ?. This is even being proposed independently from pattern matching in PEP 640. We feel however that using ? as a special “assignment” target is likely more confusing to Python users than using _. It violates Python’s (admittedly vague) principle of using punctuation characters only in ways similar to how they are used in common English usage or in high school math, unless the usage is very well established in other programming languages (like, e.g., using a dot for member access).
+
+The question mark fails on both counts: its use in other programming languages is a grab-bag of usages only vaguely suggested by the idea of a “question”. For example, it means “any character” in shell globbing, “maybe” in regular expressions, “conditional expression” in C and many C-derived languages, “predicate function” in Scheme, “modify error handling” in Rust, “optional argument” and “optional chaining” in TypeScript (the latter meaning has also been proposed for Python by PEP 505). An as yet unnamed PEP proposes it to mark optional types, e.g. int?.
+
+Another common use of ? in programming systems is “help”, for example, in IPython and Jupyter Notebooks and many interactive command-line utilities.
+
+In addition, this would put Python in a rather unique position: The underscore is as a wildcard pattern in every programming language with pattern matching that we could find (including C#, Elixir, Erlang, F#, Grace, Haskell, Mathematica, OCaml, Ruby, Rust, Scala, Swift, and Thorn). Keeping in mind that many users of Python also work with other programming languages, have prior experience when learning Python, and may move on to other languages after having learned Python,  standards are imporwe find that such well-establishedtant and relevant with respect to readability and learnability. In our view, concerns that this wildcard means that a regular name received special treatment are not strong enough to introduce syntax that would make Python special.",Patterns,Wildcard Pattern,Design Decision
+635,"It is good programming style to use named constants for parametric values or to clarify the meaning of particular values. Clearly, it would be preferable to write case (HttpStatus.OK, body): over case (200, body):, for example. The main issue that arises here is how to distinguish capture patterns (variable bindings) from value patterns. The general discussion surrounding this issue has brought forward a plethora of options, which we cannot all fully list here.",Patterns,Distinguishing Capture and Value Patterns,Design Decision
+635,"Strictly speaking, value patterns are not really necessary, but could be implemented using guards, i.e. case (status, body) if status == HttpStatus.OK:. Nonetheless, the convenience of value patterns is unquestioned and obvious.",Patterns,Value Pattern,Design Decision
+635,"The observation that constants tend to be written in uppercase letters or collected in enumeration-like namespaces suggests possible rules to discern constants syntactically. However, the idea of using upper- vs. lowercase as a marker has been met with scepticism since there is no similar precedence in core Python (although it is common in other languages). We therefore only adopted the rule that any dotted name (i.e., attribute access) is to be interpreted as a value pattern, for example HttpStatus.OK above. This precludes, in particular, local variables and global variables defined in the current module from acting as constants.",Patterns,Distinguishing Capture and Value Patterns,Design Decision
+635,"A proposed rule to use a leading dot (e.g. .CONSTANT) for that purpose was criticised because it was felt that the dot would not be a visible-enough marker for that purpose. Partly inspired by forms found in other programming languages, a number of different markers/sigils were proposed (such as ^CONSTANT, $CONSTANT, ==CONSTANT, CONSTANT?, or the word enclosed in backticks), although there was no obvious or natural choice. The current proposal therefore leaves the discussion and possible introduction of such a ‘constant’ marker for a future PEP.",Patterns,Distinguishing Capture and Value Patterns,Design Decision
+635,"Sequence patterns follow as closely as possible the already established syntax and semantics of iterable unpacking. Of course, subpatterns take the place of assignment targets (variables, attributes and subscript). Moreover, the sequence pattern only matches a carefully selected set of possible subjects, whereas iterable unpacking can be applied to any iterable.
+
+As in iterable unpacking, we do not distinguish between ‘tuple’ and ‘list’ notation. [a, b, c], (a, b, c) and a, b, c are all equivalent. While this means we have a redundant notation and checking specifically for lists or tuples requires more effort (e.g. case list([a, b, c])), we mimic iterable unpacking as much as possible.",Sequence Patterns,Reuse of Iterable Unpacking Semantics,Design Decision
+635,"A starred pattern will capture a sub-sequence of arbitrary length, again mirroring iterable unpacking. Only one starred item may be present in any sequence pattern. In theory, patterns such as (*_, 3, *_) could be understood as expressing any sequence containing the value 3. In practice, however, this would only work for a very narrow set of use cases and lead to inefficient backtracking or even ambiguities otherwise.",Sequence Patterns,Restricting Multiple Starred Patterns,Design Decision
+635,"The sequence pattern does not iterate through an iterable subject. All elements are accessed through subscripting and slicing, and the subject must be an instance of collections.abc.Sequence. This includes, of course, lists and tuples, but excludes e.g. sets and dictionaries. While it would include strings and bytes, we make an exception for these (see below).
+
+A sequence pattern cannot just iterate through any iterable object. The consumption of elements from the iteration would have to be undone if the overall pattern fails, which is not feasible.
+To identify sequences we cannot rely on len() and subscripting and slicing alone, because sequences share these protocols with mappings (e.g. dict) in this regard. It would be surprising if a sequence pattern also matched a dictionaries or other objects implementing the mapping protocol (i.e. __getitem__). The interpreter therefore performs an instance check to ensure that the subject in question really is a sequence (of known type). (As an optimization of the most common case, if the subject is exactly a list or a tuple, the instance check can be skipped.)",Sequence Patterns,Matching Only Sequence Objects,Design Decision
+635,"String and bytes objects have a dual nature: they are both ‘atomic’ objects in their own right, as well as sequences (with a strongly recursive nature in that a string is a sequence of strings). The typical behavior and use cases for strings and bytes are different enough from those of tuples and lists to warrant a clear distinction. It is in fact often unintuitive and unintended that strings pass for sequences, as evidenced by regular questions and complaints. Strings and bytes are therefore not matched by a sequence pattern, limiting the sequence pattern to a very specific understanding of ‘sequence’. The built-in bytearray type, being a mutable version of bytes, also deserves an exception; but we don’t intend to enumerate all other types that may be used to represent bytes (e.g. some, but not all, instances of memoryview and array.array).",Sequence Patterns,Excluding Strings and Bytes from Sequence Patterns,Design Decision
+635,"To avoid overly expensive matching algorithms, keys must be literals or value patterns.",Mapping Patterns,Restricting Mapping Pattern Keys to Literals and Value Patterns,Design Decision
+635,"There is a subtle reason for using get(key, default) instead of __getitem__(key) followed by a check for AttributeError: if the subject happens to be a defaultdict, calling __getitem__ for a non-existent key would add the key. Using get() avoids this unexpected side effect.",Mapping Patterns,Avoiding Side Effects During Key Lookup,Design Decision
+635,"The mapping pattern reflects the common usage of dictionary lookup: it allows the user to extract some values from a mapping by means of constant/known keys and have the values match given subpatterns. Extra keys in the subject are ignored even if **rest is not present. This is different from sequence patterns, where extra items will cause a match to fail. But mappings are actually different from sequences: they have natural structural sub-typing behavior, i.e., passing a dictionary with extra keys somewhere will likely just work. Should it be necessary to impose an upper bound on the mapping and ensure that no additional keys are present, then the usual double-star-pattern **rest can be used. The special case **_ with a wildcard, however, is not supported as it would not have any effect, but might lead to an incorrect understanding of the mapping pattern’s semantics.",Mapping Patterns,Ignoring Extra Mapping Keys,Design Decision
+635,"Class patterns fulfill two purposes: checking whether a given subject is indeed an instance of a specific class, and extracting data from specific attributes of the subject. Anecdotal evidence revealed that isinstance() is one of the most often used functions in Python in terms of static occurrences in programs. Such instance checks typically precede a subsequent access to information stored in the object, or a possible manipulation thereof. A typical pattern might be along the lines of:
+
+def traverse_tree(node):     if isinstance(node, Node):         traverse_tree(node.left)         traverse_tree(node.right)     elif isinstance(node, Leaf):         print(node.value) 
+
+In many cases class patterns occur nested, as in the example given in the motivation:
+
+We envision two possibilities for dealing with this issue: either explicitly name the attributes of interest, or provide an additional mapping that tells the interpreter which attributes to extract and in which order. Both approaches are supported. Moreover, explicitly naming the attributes of interest lets you further specify the required structure of an object; if an object lacks an attribute specified by the pattern, the match fails.",Class Patterns,Combining Instance Checks and Attribute Extraction,Design Decision
+635,"The class pattern lets you concisely specify both an instance check and relevant attributes (with possible further constraints). It is thereby very tempting to write, e.g., case Node(left, right): in the first case above and case Leaf(value): in the second. While this indeed works well for languages with strict algebraic data types, it is problematic with the structure of Python objects.
+
+When dealing with general Python objects, we face a potentially very large number of unordered attributes: an instance of Node contains a large number of attributes (most of which are ‘special methods’ such as __repr__). Moreover, the interpreter cannot reliably deduce the ordering of attributes. For an object that represents a circle, say, there is no inherently obvious ordering of the attributes x, y and radius.",Class Patterns,Positional Class Patterns and Object Structure,Design Decision
+635,"Attributes that are explicitly named pick up the syntax of named arguments. If an object of class Node has two attributes left and right as above, the pattern Node(left=x, right=y) will extract the values of both attributes and assign them to x and y, respectively. The data flow from left to right seems unusual, but is in line with mapping patterns and has precedents such as assignments via as in with- or import-statements (and indeed AS patterns).
+
+Naming the attributes in question explicitly will be mostly used for more complex cases where the positional form (below) is insufficient.
+
+",Class Patterns,Named Attribute Patterns,Design Decision
+635,"The class field __match_args__ specifies a number of attributes together with their ordering, allowing class patterns to rely on positional sub-patterns without having to explicitly name the attributes in question. This is particularly handy for smaller objects or instances of data classes, where the attributes of interest are rather obvious and often have a well-defined ordering. In a way, __match_args__ is similar to the declaration of formal parameters, which allows calling functions with positional arguments rather than naming all the parameters.",Class Patterns,Positional Patterns with match_args,Design Decision
+635,"The syntax of class patterns is based on the idea that de-construction mirrors the syntax of construction. This is already the case in virtually any Python construct, be assignment targets, function definitions or iterable unpacking. In all these cases, we find that the syntax for sending and that for receiving ‘data’ are virtually identical.
+
+Assignment targets such as variables, attributes and subscripts: foo.bar[2] = foo.bar[3];
+
+Function definitions: a function defined with def foo(x, y, z=6) is called as, e.g., foo(123, y=45), where the actual arguments provided at the call site are matched against the formal parameters at the definition site;
+
+Iterable unpacking: a, b = b, a or [a, b] = [b, a] or (a, b) = (b, a), just to name a few equivalent possibilities.
+
+Using the same syntax for reading and writing, l- and r-values, or construction and de-construction is widely accepted for its benefits in thinking about data, its flow and manipulation. This equally extends to the explicit construction of instances, where class patterns C(p, q) deliberately mirror the syntax of creating instances.
+
+The special case for the built-in classes bool, bytearray etc. (where e.g. str(x) captures the subject value in x) can be emulated by a user-defined class as follows:
+
+class MyClass:     __match_args__ = [""__myself__""]     __myself__ = property(lambda self: self) ",Class Patterns,Mirroring Construction and Deconstruction Syntax,Design Decision
+635,"Type annotations for pattern variables. The proposal was to combine patterns with type annotations:
+
+match x:     case [a: int, b: str]: print(f""An int {a} and a string {b}:"")     case [a: int, b: int, c: int]: print(""Three ints"", a, b, c)     ... 
+
+This idea has a lot of problems. For one, the colon can only be used inside of brackets or parentheses, otherwise the syntax becomes ambiguous. And because Python disallows isinstance() checks on generic types, type annotations containing generics will not work as expected.",Patterns,Rejecting Type Annotations in Patterns,Design Decision
+635, 0 | 1: with | denoting alternative patterns.,OR Patterns,Alternative Pattern Composition,Design Decision
+635,the underscore _ was widely adopted as a wildcard...,Wildcard Patterns,Using _ as Wildcard Pattern,Design Decision
+635,patterns became increasingly independent of the original tuple constructors.,Patterns,Separating Patterns from Object Constructors,Design Decision
+635,we simply use isinstance() together with the match_args field...,Class Patterns,Using isinstance() and __match_args__ for Class Patterns,Design Decision
+635,"we also added a more direct way to specify the presence of, or constraints on specific attributes.",Class Patterns,Supporting Attribute-Based Matching with Object Patterns,Design Decision
+636,"Your main loop will need to get input from the user and split it into words, let’s say a list of strings like this:
+
+command = input(""What are you doing next? "") # analyze the result of command.split() 
+
+The next step is to interpret the words. Most of our commands will have two words: an action and an object. So you may be tempted to do the following:
+
+[action, obj] = command.split() ... # interpret action, obj 
+
+The problem with that line of code is that it’s missing something: what if the user types more or fewer than 2 words? To prevent this problem you can either check the length of the list of words, or capture the ValueError that the statement above would raise.
+
+You can use a matching statement instead:",Sequence Patterns,Structural Matching of Sequences,Key Feature
+636,"you can use either parenthesis, brackets, or just comma separation as synonyms... All forms will match any sequence",Sequence Patterns,Reuse of Iterable Unpacking Syntax,Design Decision
+636,"Even if most commands have the action/object form, you might want to have user commands of different lengths. For example, you might want to add single verbs with no object like look or quit. A match statement can (and is likely to) have more than one case:
+
+match command.split():     case [action]:         ... # interpret single-verb action     case [action, obj]:         ... # interpret action, obj 
+
+The match statement will check patterns from top to bottom. If the pattern doesn’t match the subject, the next pattern will be tried. However, once the first matching pattern is found, the body of that case is executed, and all further cases are ignored. This is similar to the way that an if/elif/elif/... statement works.",Match Statement,First Matching Case Selection,Design Decision
+636,"Your code still needs to look at the specific actions and conditionally execute different logic depending on the specific action (e.g., quit, attack, or buy). You could do that using a chain of if/elif/elif/..., or using a dictionary of functions, but here we’ll leverage pattern matching to solve that task. Instead of a variable, you can use literal values in patterns (like ""quit"", 42, or None). This allows you to write:
+
+match command.split():     case [""quit""]:         print(""Goodbye!"")         quit_game()     case [""look""]:         current_room.describe()     case [""get"", obj]:         character.get(obj, current_room)     case [""go"", direction]:         current_room = current_room.neighbor(direction)     # The rest of your commands go here 
+
+A pattern like [""get"", obj] will match only 2-element sequences that have a first element equal to ""get"". It will also bind obj = subject[1].
+
+As you can see in the go case, we also can use different variable names in different patterns.
+
+Literal values are compared with the == operator except for the constants True, False and None which are compared with the is operator.",Literal Patterns,Using Literal Patterns for Value Matching,Design Decision
+636,"You may want to print an error message saying that the command wasn’t recognized when all the patterns fail. You could use the feature we just learned and write case [*ignored_words] as your last pattern. There’s however a much simpler way:
+
+match command.split():     case [""quit""]: ... # Code omitted for brevity     case [""go"", direction]: ...     case [""drop"", *objects]: ...     ... # Other cases     case _:         print(f""Sorry, I couldn't understand {command!r}"") 
+
+This special pattern which is written _ (and called wildcard) always matches but it doesn’t bind any variables.
+
+Note that this will match any object, not just sequences. As such, it only makes sense to have it by itself as the last pattern (to prevent errors, Python will stop you from using it before).",Wildcard Patterns,Wildcard Pattern Matching,Design Decision
+636,"This is a good moment to step back from the examples and understand how the patterns that you have been using are built. Patterns can be nested within each other, and we have been doing that implicitly in the examples above.
+
+There are some “simple” patterns (“simple” here meaning that they do not contain other patterns) that we’ve seen:
+
+Capture patterns (stand-alone names like direction, action, objects). We never discussed these separately, but used them as part of other patterns.
+
+Literal patterns (string literals, number literals, True, False, and None)
+
+The wildcard pattern _
+
+Until now, the only non-simple pattern we have experimented with is the sequence pattern. Each element in a sequence pattern can in fact be any other pattern. This means that you could write a pattern like [""first"", (left, right), _, *rest]. This will match subjects which are a sequence of at least three elements, where the first one is equal to ""first"" and the second one is in turn a sequence of two elements. It will also bind left=subject[1][0], right=subject[1][1], and rest = subject[3:]",Patterns,Nested Pattern Composition,Design Decision
+636,"Going back to the adventure game example, you may find that you’d like to have several patterns resulting in the same outcome. For example, you might want the commands north and go north to be equivalent. You may also desire to have aliases for get X, pick up X and pick X up for any X.
+
+The | symbol in patterns combines them as alternatives. You could for example write:
+
+match command.split():     ... # Other cases     case [""north""] | [""go"", ""north""]:         current_room = current_room.neighbor(""north"")     case [""get"", obj] | [""pick"", ""up"", obj] | [""pick"", obj, ""up""]:         ... # Code for picking up the given object 
+
+This is called an or pattern and will produce the expected result. Patterns are tried from left to right; this may be relevant to know what is bound if more than one alternative matches. An important restriction when writing or patterns is that all alternatives should bind the same variables. So a pattern [1, x] | [2, y] is not allowed because it would make unclear which variable would be bound after a successful match. [1, x] | [2, x] is perfectly fine and will always bind x if successful.",OR Patterns,Combining Alternative Patterns,Design Decision
+636,"The first version of our “go” command was written with a [""go"", direction] pattern. The change we did in our last version using the pattern [""north""] | [""go"", ""north""] has some benefits but also some drawbacks in comparison: the latest version allows the alias, but also has the direction hardcoded, which will force us to actually have separate patterns for north/south/east/west. This leads to some code duplication, but at the same time we get better input validation, and we will not be getting into that branch if the command entered by the user is ""go figure!"" instead of a direction.
+
+We could try to get the best of both worlds doing the following (I’ll omit the aliased version without “go” for brevity):
+
+match command.split():     case [""go"", (""north"" | ""south"" | ""east"" | ""west"")]:         current_room = current_room.neighbor(...)         # how do I know which direction to go? 
+
+This code is a single branch, and it verifies that the word after “go” is really a direction. But the code moving the player around needs to know which one was chosen and has no way to do so. What we need is a pattern that behaves like the or pattern but at the same time does a capture. We can do so with an as pattern:
+
+match command.split():     case [""go"", (""north"" | ""south"" | ""east"" | ""west"") as direction]:         current_room = current_room.neighbor(direction) 
+
+The as-pattern matches whatever pattern is on its left-hand side, but also binds the value to a name.",AS Patterns,Capturing Values from Matched Patterns,Design Decision
+636,"The patterns we have explored above can do some powerful data filtering, but sometimes you may wish for the full power of a boolean expression. Let’s say that you would actually like to allow a “go” command only in a restricted set of directions based on the possible exits from the current_room. We can achieve that by adding a guard to our case. Guards consist of the if keyword followed by any expression:
+
+match command.split():     case [""go"", direction] if direction in current_room.exits:         current_room = current_room.neighbor(direction)     case [""go"", _]:         print(""Sorry, you can't go that way"") 
+
+The guard is not part of the pattern, it’s part of the case. It’s only checked if the pattern matches, and after all the pattern variables have been bound (that’s why the condition can use the direction variable in the example above). If the pattern matches and the condition is truthy, the body of the case executes normally. If the pattern matches but the condition is falsy, the match statement proceeds to check the next case as if the pattern hadn’t matched (with the possible side-effect of having already bound some variables).
+",Guards,Adding Conditions to Case Clauses,Design Decision
+636,"our adventure is becoming a success and you have been asked to implement a graphical interface. Your UI toolkit of choice allows you to write an event loop where you can get a new event object by calling event.get(). The resulting object can have different type and attributes according to the user action, for example:
+
+A KeyPress object is generated when the user presses a key. It has a key_name attribute with the name of the key pressed, and some other attributes regarding modifiers.
+
+A Click object is generated when the user clicks the mouse. It has an attribute position with the coordinates of the pointer.
+
+A Quit object is generated when the user clicks on the close button for the game window.
+
+Rather than writing multiple isinstance() checks, you can use patterns to recognize different kinds of objects, and also apply patterns to its attributes:
+
+match event.get():     case Click(position=(x, y)):         handle_click_at(x, y)     case KeyPress(key_name=""Q"") | Quit():         game.quit()     case KeyPress(key_name=""up arrow""):         game.go_north()     ...     case KeyPress():         pass # Ignore other keystrokes     case other_event:         raise ValueError(f""Unrecognized event: {other_event}"") 
+
+A pattern like Click(position=(x, y)) only matches if the type of the event is a subclass of the Click class. It will also require that the event has a position attribute that matches the (x, y) pattern. If there’s a match, the locals x and y will get the expected values.
+
+A pattern like KeyPress(), with no arguments will match any object which is an instance of the KeyPress class. Only the attributes you specify in the pattern are matched, and any other attributes are ignored.",Class Patterns,Matching Object Types and Attributes,Design Decision
+636,"Your adventure is becoming a success and you have been asked to implement a graphical interface. Your UI toolkit of choice allows you to write an event loop where you can get a new event object by calling event.get(). The resulting object can have different type and attributes according to the user action, for example:
+
+    A KeyPress object is generated when the user presses a key. It has a key_name attribute with the name of the key pressed, and some other attributes regarding modifiers.
+
+    A Click object is generated when the user clicks the mouse. It has an attribute position with the coordinates of the pointer.
+
+    A Quit object is generated when the user clicks on the close button for the game window.
+
+Rather than writing multiple isinstance() checks, you can use patterns to recognize different kinds of objects, and also apply patterns to its attributes:
+
+match event.get():     case Click(position=(x, y)):         handle_click_at(x, y)     case KeyPress(key_name=""Q"") | Quit():         game.quit()     case KeyPress(key_name=""up arrow""):         game.go_north()     ...     case KeyPress():         pass # Ignore other keystrokes     case other_event:         raise ValueError(f""Unrecognized event: {other_event}"") ",Class Patterns,Supporting Positional Attribute Matching,Design Decision
+636,"The previous section described how to match named attributes when doing an object match. For some objects it could be convenient to describe the matched arguments by position (especially if there are only a few attributes and they have a “standard” ordering). If the classes that you are using are named tuples or dataclasses, you can do that by following the same order that you’d use when constructing an object. For example, if the UI framework above defines their class like this:
+
+from dataclasses import dataclass  @dataclass class Click:     position: tuple     button: Button 
+
+then you can rewrite your match statement above as:
+
+match event.get():     case Click((x, y)):         handle_click_at(x, y) 
+
+The (x, y) pattern will be automatically matched against the position attribute, because the first argument in the pattern corresponds to the first attribute in your dataclass definition.
+
+Other classes don’t have a natural ordering of their attributes so you’re required to use explicit names in your pattern to match with their attributes. However, it’s possible to manually specify the ordering of the attributes allowing positional matching, like in this alternative definition:
+
+class Click:     __match_args__ = (""position"", ""button"")     def __init__(self, pos, btn):         self.position = pos         self.button = btn         ... 
+
+The __match_args__ special attribute defines an explicit order for your attributes that can be used in patterns like case Click((x,y)).",Class Patterns,Supporting Positional Attribute Matching,Design Decision
+636,"Your pattern above treats all mouse buttons the same, and you have decided that you want to accept left-clicks, and ignore other buttons. While doing so, you notice that the button attribute is typed as a Button which is an enumeration built with enum.Enum. You can in fact match against enumeration values like this:
+
+match event.get():     case Click((x, y), button=Button.LEFT):  # This is a left click         handle_click_at(x, y)     case Click():         pass  # ignore other clicks 
+
+This will work with any dotted name (like math.pi). However an unqualified name (i.e. a bare name with no dots) will be always interpreted as a capture pattern, so avoid that ambiguity by always using qualified constants in patterns.
+",Value Patterns,Using Qualified Names for Constant Matching,Design Decision
+636,"You have decided to make an online version of your game. All of your logic will be in a server, and the UI in a client which will communicate using JSON messages. Via the json module, those will be mapped to Python dictionaries, lists and other builtin objects.
+
+Our client will receive a list of dictionaries (parsed from JSON) of actions to take, each element looking for example like these:
+
+{""text"": ""The shop keeper says 'Ah! We have Camembert, yes sir'"", ""color"": ""blue""}
+
+If the client should make a pause {""sleep"": 3}
+
+To play a sound {""sound"": ""filename.ogg"", ""format"": ""ogg""}
+
+Until now, our patterns have processed sequences, but there are patterns to match mappings based on their present keys. In this case you could use:
+
+for action in actions:     match action:         case {""text"": message, ""color"": c}:             ui.set_text_color(c)             ui.display(message)         case {""sleep"": duration}:             ui.wait(duration)         case {""sound"": url, ""format"": ""ogg""}:             ui.play(url)         case {""sound"": _, ""format"": _}:             warning(""Unsupported audio format"") 
+
+The keys in your mapping pattern need to be literals, but the values can be any pattern. As in sequence patterns, all subpatterns have to match for the general pattern to match.
+
+You can use **rest within a mapping pattern to capture additional keys in the subject. Note that if you omit this, extra keys in the subject will be ignored while matching, i.e. the message {""text"": ""foo"", ""color"": ""red"", ""style"": ""bold""} will match the first pattern in the example above.",Mapping Patterns,Matching Mappings by Keys,Design Decision
+636,"The code above could use some validation. Given that messages came from an external source, the types of the field could be wrong, leading to bugs or security issues.
+
+Any class is a valid match target, and that includes built-in classes like bool str or int. That allows us to combine the code above with a class pattern. So instead of writing {""text"": message, ""color"": c} we can use {""text"": str() as message, ""color"": str() as c} to ensure that message and c are both strings. For many builtin classes (see PEP 634 for the whole list), you can use a positional parameter as a shorthand, writing str(c) rather than str() as c. The fully rewritten version looks like this:
+
+for action in actions:     match action:         case {""text"": str(message), ""color"": str(c)}:             ui.set_text_color(c)             ui.display(message)         case {""sleep"": float(duration)}:             ui.wait(duration)         case {""sound"": str(url), ""format"": ""ogg""}:             ui.play(url)         case {""sound"": _, ""format"": _}:             warning(""Unsupported audio format"") ",Class Patterns,Using Class Patterns for Type Validation,Design Decision
