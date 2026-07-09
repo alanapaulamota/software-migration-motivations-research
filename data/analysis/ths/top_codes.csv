@@ -1,0 +1,21 @@
+Codes,count
+Type Compatibility and Subtyping,13
+Type System Design Decisions,7
+Extending Type Annotation Support to Variable Categories,5
+Introducing Native Variable Annotation Syntax,4
+Support for Forward References in Type Annotations,4
+Defining Type System Concepts,4
+Standardizing Type Annotation Syntax,4
+Exposing Annotations Through Introspection APIs,3
+Introduction of Typing Module,3
+Stub File-Based Type Distribution,3
+Support for Generic Class and Instance Method Annotations,3
+Support for Type Comments,3
+Preserving Annotation Flexibility,3
+Expansion of Type Hinting Utilities,3
+Function and Method Overloading,3
+Support for Generic Collection Type Annotations,2
+Variance Support in Generic Types,2
+Support for Variable Annotations in Stubs,2
+Generic Types and Type Variables,2
+Support for Generic User-Defined Classes,2

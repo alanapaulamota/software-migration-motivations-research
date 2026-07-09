@@ -1,0 +1,15 @@
+Group,Adoption Practice,Benefits,Compatibility,Design Decision,Evolution of Type Hinting,Key Feature,Motivation,Previous Approach,Previous Approach / Limitation,Syntax,Syntax Limitations,Type Checking Rules
+Annotation Design,0,0,0,7,0,0,0,0,0,1,0,0
+Annotation Syntax,0,0,0,0,0,0,0,0,0,1,1,0
+Compatibility & Adoption,2,0,1,0,1,1,0,0,1,0,0,0
+Developer Tooling & Ecosystem Support,7,3,0,0,0,0,0,0,0,0,0,0
+Evolution of Type System,0,0,0,0,0,0,1,0,0,0,0,0
+Motivation & Goals,0,0,0,0,0,1,4,0,0,0,0,0
+Stub Files & Type Distribution,0,0,0,1,0,9,0,0,0,0,0,0
+Type Annotation Syntax,0,0,0,19,0,3,3,0,0,3,0,0
+Type Checking Control,0,0,0,2,0,4,0,0,0,0,0,0
+Type Hints,0,0,0,0,0,0,1,0,0,0,0,0
+Type System Design,0,0,0,18,0,56,0,1,0,0,0,2
+"Type System Design
+",0,0,0,1,0,1,0,0,0,0,0,0
+Variable Annotations,0,0,0,6,1,5,3,0,2,0,0,0
